@@ -7,9 +7,9 @@ export function Inputs() {
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        submitInputs();
+        await submitInputs(keyword, url, companyName);
       }}
     >
       <input
@@ -35,6 +35,17 @@ export function Inputs() {
   );
 }
 
-function submitInputs() {
-  return "hello World";
+async function submitInputs(keyword: string, url: string, companyName: string) {
+  const test = await fetch("/api/metadata", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      keyword: keyword,
+      url: url,
+      companyName: companyName,
+    }),
+  });
+  console.log("RESPONSE: ", test);
 }
