@@ -47,5 +47,4 @@ async function submitInputs(keyword: string, url: string, companyName: string) {
       companyName: companyName,
     }),
   });
-  console.log("RESPONSE: ", test);
 }
