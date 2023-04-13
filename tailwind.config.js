@@ -10,6 +10,8 @@ module.exports = {
     colors: {
       googleBlue: "#1A0DAB",
       googleGrey: "#4D5156",
+      lightGrey: "#DEDEDE",
+      lightestGrey: "#F8FAFC",
     },
     extend: {},
   },

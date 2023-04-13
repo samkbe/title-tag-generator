@@ -45,6 +45,7 @@ async function getMetaData({ url, keyword, companyName }: GetMetaDataArgs) {
       prompt: prompt,
       temperature: 0.7,
       max_tokens: 100,
+      n: 3,
     });
     const formattedData = extract(openApiResponse.data);
     return formattedData;
