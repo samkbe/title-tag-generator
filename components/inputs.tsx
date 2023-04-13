@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MetaTagDisplay } from "./metatag-display";
+import type { MetaTagsResponse } from "../types";
 
 export function Inputs() {
   const [url, setUrl] = useState<string>("");
@@ -24,7 +25,14 @@ export function Inputs() {
       }}
     >
       <div className="flex flex-col w-4/5">
+        <label
+          htmlFor="website_url"
+          className="block mb-2 text-sm font-medium dark:text-white"
+        >
+          Your Website URL
+        </label>
         <input
+          id="website_url"
           required
           className="border border-lightGrey text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           type="text"
@@ -32,17 +40,31 @@ export function Inputs() {
           onChange={(e) => setUrl(e.target.value)}
           placeholder="www.johnsplumbingservices.com"
         ></input>
+        <label
+          htmlFor="company_name"
+          className="block mb-2 text-sm font-medium dark:text-white"
+        >
+          Company Name
+        </label>
         <input
+          id="company_name"
           required
-          className="p-2 rounded-md"
+          className="border border-lightGrey text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           type="text"
           value={companyName}
           onChange={(e) => setCompanyName(e.target.value)}
           placeholder="John's Plumbing"
         ></input>
+        <label
+          htmlFor="target_keyword"
+          className="block mb-2 text-sm font-medium dark:text-white"
+        >
+          Target Keyword
+        </label>
         <input
+          id="target_keyword"
           required
-          className="p-2 rounded-md"
+          className="border border-lightGrey text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           type="text"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
@@ -51,14 +73,14 @@ export function Inputs() {
       </div>
       {isRefetching && (
         <div>
-          <SERPLoading />
-          <SERPLoading />
-          <SERPLoading />
+          <LoadingSkeleton />
+          <LoadingSkeleton />
+          <LoadingSkeleton />
         </div>
       )}
       {data && !isRefetching && <MetaTagDisplay data={data} />}
       <button className="text-sm shadow-xl mb-4 rounded-lg p-3 w-full transition-all duration-500 transform hover:-translate-y-1 absolute bottom-0">
-        {data ? "Generate More" : "Generate"}
+        {data ? "Generate Again" : "Generate"}
       </button>
     </form>
   );
@@ -76,26 +98,11 @@ async function getMetaTags(keyword: string, url: string, companyName: string) {
       companyName: companyName,
     }),
   });
-  const data: Response = await response.json();
+  const data: MetaTagsResponse = await response.json();
   return data;
 }
 
-type Response = Success | Failed;
-type Failed = {
-  __typename: "failed";
-  message: string;
-};
-type Success = {
-  __typename: "success";
-  url: string;
-  options: Metadata[];
-};
-type Metadata = {
-  titleTag: string;
-  descriptionTag: string;
-};
-
-function SERPLoading() {
+function LoadingSkeleton() {
   return (
     <div role="status" className="max-w-sm animate-pulse p-2 m-1">
       <div className="h-2.5 bg-lightGrey rounded-full w-48 mb-4"></div>

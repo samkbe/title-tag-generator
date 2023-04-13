@@ -1,32 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 import { Configuration, OpenAIApi, CreateCompletionResponse } from "openai";
-
-type GetMetaDataArgs = {
-  url: string;
-  keyword: string;
-  companyName: string;
-};
-type Response = Success | Failed;
-type Failed = {
-  __typename: "failed";
-  message: string;
-};
-type Success = {
-  __typename: "success";
-  url: string;
-  options: Metadata[];
-};
-type Metadata = {
-  titleTag: string;
-  descriptionTag: string;
-};
-interface ExtendedNextApiRequest extends NextApiRequest {
-  body: {
-    keyword: string;
-    url: string;
-    companyName: string;
-  };
-}
+import {
+  GetMetaDataArgs,
+  ExtendedNextApiRequest,
+  MetaTagsResponse,
+} from "../../types";
 
 async function getMetaData({ url, keyword, companyName }: GetMetaDataArgs) {
   const prompt = `Act as an SEO expert. Generate an optimized title tag strictly under 60 characters and a description tag strictly under 155 characters with the keyword "${keyword}" for the company ${companyName}. Their website is ${url}. Include the company name at the end of the title tag. Please provide the title tag and description tag in the following format:
@@ -56,7 +34,7 @@ async function getMetaData({ url, keyword, companyName }: GetMetaDataArgs) {
 
 export default function handler(
   req: ExtendedNextApiRequest,
-  res: NextApiResponse<Response>
+  res: NextApiResponse<MetaTagsResponse>
 ) {
   const { keyword, url, companyName } = req.body;
   try {
