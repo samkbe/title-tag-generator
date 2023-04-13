@@ -7,6 +7,10 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    colors: {
+      googleBlue: "#1A0DAB",
+      googleGrey: "#4D5156",
+    },
     extend: {},
   },
   plugins: [],

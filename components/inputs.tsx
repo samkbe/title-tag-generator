@@ -7,36 +7,47 @@ export function Inputs() {
 
   return (
     <form
+      className="flex flex-col justify-between"
       onSubmit={async (e) => {
         e.preventDefault();
         await submitInputs(keyword, url, companyName);
       }}
     >
-      <input
-        type="text"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="Input your website URL"
-      ></input>
-      <input
-        type="text"
-        value={companyName}
-        onChange={(e) => setCompanyName(e.target.value)}
-        placeholder="Input your company name"
-      ></input>
-      <input
-        type="text"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        placeholder="Input your target keyword"
-      ></input>
-      <button type="submit">Lets go!</button>
+      <div className="h-2/5 flex flex-col justify-between">
+        <input
+          className="p-2 rounded-md w-full"
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Input your website URL"
+        ></input>
+        <input
+          className="p-2 rounded-md"
+          type="text"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+          placeholder="Input your company name"
+        ></input>
+        <input
+          className="p-2 rounded-md"
+          type="text"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="Input your target keyword"
+        ></input>
+      </div>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        type="submit"
+      >
+        Lets go!
+      </button>
     </form>
   );
 }
 
 async function submitInputs(keyword: string, url: string, companyName: string) {
-  const test = await fetch("/api/metadata", {
+  const response = await fetch("/api/metadata", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,4 +58,7 @@ async function submitInputs(keyword: string, url: string, companyName: string) {
       companyName: companyName,
     }),
   });
+  const data = await response.json();
+  console.log(data);
+  return data;
 }

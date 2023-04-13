@@ -58,7 +58,6 @@ export default function handler(
   res: NextApiResponse<Response>
 ) {
   const { keyword, url, companyName } = req.body;
-
   try {
     getMetaData(req.body).then((data) => {
       if (data) {
@@ -67,6 +66,8 @@ export default function handler(
           url: url,
           options: data.metaDataArray,
         });
+      } else {
+        throw new Error();
       }
     });
   } catch (e) {
@@ -77,8 +78,8 @@ export default function handler(
   }
 }
 
+//This parses and formats the Open AI API response
 function extract(response: CreateCompletionResponse) {
-  //This formats the Open AI API response
   return {
     __typename: "success",
     metaDataArray: response.choices.map((choice) => {
