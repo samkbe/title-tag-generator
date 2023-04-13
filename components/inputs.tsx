@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-
-type serpProps = {
-  titleTag: string;
-  descriptionTag: string;
-  url: string;
-};
+import { MetaTagDisplay } from "./metatag-display";
 
 export function Inputs() {
   const [url, setUrl] = useState<string>("");
@@ -20,74 +15,53 @@ export function Inputs() {
     }
   );
 
-  if (isRefetching) {
-    return <>Loading...</>;
-  } else if (isError) {
-    return <>Error....</>;
-  } else {
-    return (
-      <form
-        className="flex flex-col relative h-full"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          refetch();
-        }}
-      >
-        <div className="flex flex-col w-4/5">
-          <input
-            required
-            className="p-2 rounded-md w-full"
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="www.johnsplumbingservices.com"
-          ></input>
-          <input
-            required
-            className="p-2 rounded-md"
-            type="text"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            placeholder="John's Plumbing"
-          ></input>
-          <input
-            required
-            className="p-2 rounded-md"
-            type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Plumbing services"
-          ></input>
+  return (
+    <form
+      className="flex flex-col relative h-full"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        refetch();
+      }}
+    >
+      <div className="flex flex-col w-4/5">
+        <input
+          required
+          className="border border-lightGrey text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="www.johnsplumbingservices.com"
+        ></input>
+        <input
+          required
+          className="p-2 rounded-md"
+          type="text"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+          placeholder="John's Plumbing"
+        ></input>
+        <input
+          required
+          className="p-2 rounded-md"
+          type="text"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="Plumbing services"
+        ></input>
+      </div>
+      {isRefetching && (
+        <div>
+          <SERPLoading />
+          <SERPLoading />
+          <SERPLoading />
         </div>
-        {data ? (
-          <div>
-            {data.options.map(({ descriptionTag, titleTag }) => (
-              <SERP
-                url={data.url}
-                key={titleTag}
-                descriptionTag={descriptionTag}
-                titleTag={titleTag}
-              />
-            ))}
-          </div>
-        ) : isRefetching ? (
-          <div>
-            <SERPLoading />
-            <SERPLoading />
-            <SERPLoading />
-          </div>
-        ) : (
-          <></>
-        )}
-        <button
-          className="bg-googleBlue hover:bg-blue-700 text-white font-bold py-2 p-4 rounded absolute bottom-0 right-0 m-2"
-          type="submit"
-        >
-          {data ? "Generate More" : "Generate"}
-        </button>
-      </form>
-    );
-  }
+      )}
+      {data && !isRefetching && <MetaTagDisplay data={data} />}
+      <button className="text-sm shadow-xl mb-4 rounded-lg p-3 w-full transition-all duration-500 transform hover:-translate-y-1 absolute bottom-0">
+        {data ? "Generate More" : "Generate"}
+      </button>
+    </form>
+  );
 }
 
 async function getMetaTags(keyword: string, url: string, companyName: string) {
@@ -102,9 +76,24 @@ async function getMetaTags(keyword: string, url: string, companyName: string) {
       companyName: companyName,
     }),
   });
-  const data = await response.json();
+  const data: Response = await response.json();
   return data;
 }
+
+type Response = Success | Failed;
+type Failed = {
+  __typename: "failed";
+  message: string;
+};
+type Success = {
+  __typename: "success";
+  url: string;
+  options: Metadata[];
+};
+type Metadata = {
+  titleTag: string;
+  descriptionTag: string;
+};
 
 function SERPLoading() {
   return (
@@ -113,20 +102,6 @@ function SERPLoading() {
       <div className="h-2 bg-lightGrey rounded-full max-w-[360px] mb-2.5"></div>
       <div className="h-2 bg-lightGrey rounded-full mb-2.5"></div>
       <span className="sr-only">Loading...</span>
-    </div>
-  );
-}
-
-function SERP({ titleTag, descriptionTag, url }: serpProps) {
-  return (
-    <div className="p-2 m-1">
-      <div className="hover:bg-lightestGrey relative">
-        {/* <RiFileCopyLine size="12" className="top-0 left-0" /> */}
-        <h3 className="text-googleBlue text-2xl p-1">{titleTag}</h3>
-      </div>
-      <div className="hover:bg-lightestGrey relative">
-        <h3 className="text-googleGrey text-sm p-1">{descriptionTag}</h3>
-      </div>
     </div>
   );
 }
