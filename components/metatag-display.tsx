@@ -28,7 +28,6 @@ function SerpTile({ titleTag, descriptionTag, url }: SerpProps) {
         }}
         className="hover:bg-lightestGrey relative cursor-copy"
       >
-        {/* <RiFileCopyLine size="12" className="top-0 left-0" /> */}
         <h3 className="text-googleBlue text-2xl p-1">{titleTag}</h3>
       </div>
       <div
