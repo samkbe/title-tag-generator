@@ -3,8 +3,9 @@ import { Inputs } from "../components/";
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-gray-100 h-screen flex justify-center items-center">
-      <div className="rounded-md shadow-xl bg-white w-full max-w-screen-md flex flex-col md:w-2/4 m-2 h-4/5">
+    <div className="flex flex-col justify-center items-center pt-12">
+      <h1 className="text-2xl font-bold">{"The <title> Tag Generator"}</h1>
+      <div className="rounded-md shadow-xl bg-white w-full max-w-screen-md flex flex-col md:w-3/4 m-2 items-center justify-center transition-all duration-500">
         <Inputs />
       </div>
     </div>

@@ -12,6 +12,7 @@ module.exports = {
       googleGrey: "#4D5156",
       lightGrey: "#DEDEDE",
       lightestGrey: "#F8FAFC",
+      green: "#D6F5CD",
     },
     extend: {},
   },
