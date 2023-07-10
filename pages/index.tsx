@@ -1,13 +1,23 @@
 import type { NextPage } from "next";
-import { Inputs } from "../components/";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Home: NextPage = () => {
-  return (
-    <div className="flex flex-col justify-center items-center pt-12">
-      <h1 className="text-2xl font-bold">{"The <title> Tag Generator"}</h1>
-      <div className="rounded-md shadow-xl bg-white w-full max-w-screen-md flex flex-col md:w-3/4 m-2 items-center justify-center transition-all duration-500">
-        <Inputs />
+  const { data, status } = useSession();
+  if (status === "loading") return <h1> loading... please wait</h1>;
+  if (status === "authenticated") {
+    return (
+      <div>
+        <h1> hi {data.user?.name}</h1>
+        {data.user?.image && (
+          <img src={data.user?.image} alt={data.user?.name + " photo"} />
+        )}
+        <button onClick={() => signOut()}>sign out</button>
       </div>
+    );
+  }
+  return (
+    <div>
+      <button onClick={() => signIn("google")}>sign in with gooogle</button>
     </div>
   );
 };

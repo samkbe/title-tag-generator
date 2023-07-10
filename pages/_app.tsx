@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -10,9 +11,11 @@ const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
-    </QueryClientProvider>
+    <SessionProvider session={pageProps.session}>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
 
