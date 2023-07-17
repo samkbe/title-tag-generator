@@ -15,39 +15,44 @@ export default async function handler(
 
   const token = await getToken({ req });
 
-  res.json(token);
+  if (token) {
+    const customer = client.Customer({
+      customer_id: process.env.GOOGLE_CUSTOMER_ID as string,
+      refresh_token: token?.refresh_token,
+    });
 
-  // const customer = client.Customer({
-  //   customer_id: process.env.GOOGLE_CUSTOMER_ID as string,
-  //   refresh_token:
-  //     "1//0f8G6inYUe-tJCgYIARAAGA8SNwF-L9Ir-rfA65EHpsAbq8sJoHWwFGuFxexlVSVZLLup3udbSfBDea8AOlGDA3RaxNROkutR764",
-  // });
+    try {
+      // const customers = await client.listAccessibleCustomers(
+      //   token?.refresh_token
+      // );
 
-  // try {
-  //   customer.keywordPlanIdeas
-  //     .generateKeywordIdeas({
-  //       customer_id: process.env.GOOGLE_CUSTOMER_ID as string,
-  //       geo_target_constants: [],
-  //       page_size: 1,
-  //       page_token: "",
-  //       keyword_annotation: [],
-  //       keyword_plan_network: "GOOGLE_SEARCH",
-  //       toJSON: () => {
-  //         return { test: 1 };
-  //       },
-  //       include_adult_keywords: false,
-  //       keyword_seed: {
-  //         keywords: ["water Softener"],
-  //       },
-  //     })
-  //     .then((results) => console.log(results))
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // } catch (e) {
-  //   console.log(e);
-  //   res.status(400);
-  // }
+      // // res.status(200).json(customers);
+
+      customer.keywordPlanIdeas
+        .generateKeywordIdeas({
+          customer_id: "7834575692",
+          geo_target_constants: [],
+          page_size: 1,
+          page_token: "",
+          keyword_annotation: [],
+          keyword_plan_network: "GOOGLE_SEARCH",
+          toJSON: () => {
+            return { test: 1 };
+          },
+          include_adult_keywords: false,
+          keyword_seed: {
+            keywords: ["go to market agency"],
+          },
+        })
+        .then((results) => res.status(200).json(results))
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (e) {
+      console.log(e);
+      res.status(400).json(e);
+    }
+  }
 
   res.status(200);
 }
