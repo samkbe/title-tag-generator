@@ -1,31 +1,27 @@
 import type { NextApiResponse, NextApiRequest } from "next";
 import { GoogleAdsApi } from "google-ads-api";
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const client = new GoogleAdsApi({
     client_id: process.env.GOOGLE_CLIENT_ID as string,
     client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
     developer_token: process.env.GOOGLE_DEVELOPER_TOKEN as string,
   });
 
-  client
-    .listAccessibleCustomers(
-      "1//0fg6u8GZNCJL9CgYIARAAGA8SNwF-L9IrmSFkOZHikBCDYCh90ThlfNus4XNjaVelVOMqKCVgQ9NqhBpYzCuwVMDvw2m_OL8bwYw"
-    )
-    .then((arr) => {
-      console.log("Accessible Customers: ", arr);
-    })
-    .catch((e) => console.log(e));
+  const token = await getToken({ req });
+
+  res.json(token);
 
   // const customer = client.Customer({
   //   customer_id: process.env.GOOGLE_CUSTOMER_ID as string,
-  //   refresh_token: "",
+  //   refresh_token:
+  //     "1//0f8G6inYUe-tJCgYIARAAGA8SNwF-L9Ir-rfA65EHpsAbq8sJoHWwFGuFxexlVSVZLLup3udbSfBDea8AOlGDA3RaxNROkutR764",
   // });
-
-  // client
-  //   .listAccessibleCustomers(process.env.GOOGLE_REFRESH_TOKEN as string)
-  //   .then((data) => console.log(data))
-  //   .catch((e) => console.log(e));
 
   // try {
   //   customer.keywordPlanIdeas
