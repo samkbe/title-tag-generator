@@ -8,9 +8,6 @@ const Home: NextPage = () => {
     return (
       <div>
         <h1> hi {data.user?.name}</h1>
-        {data.user?.image && (
-          <img src={data.user?.image} alt={data.user?.name + " photo"} />
-        )}
         <button onClick={() => signOut()}>sign out</button>
       </div>
     );

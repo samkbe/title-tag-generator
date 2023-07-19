@@ -22,17 +22,11 @@ export default async function handler(
     });
 
     try {
-      // const customers = await client.listAccessibleCustomers(
-      //   token?.refresh_token
-      // );
-
-      // // res.status(200).json(customers);
-
       customer.keywordPlanIdeas
         .generateKeywordIdeas({
           customer_id: "7834575692",
           geo_target_constants: [],
-          page_size: 1,
+          page_size: 3,
           page_token: "",
           keyword_annotation: [],
           keyword_plan_network: "GOOGLE_SEARCH",
@@ -53,6 +47,5 @@ export default async function handler(
       res.status(400).json(e);
     }
   }
-
-  res.status(200);
+  res.status(400).json("Sorry, there was no token");
 }
