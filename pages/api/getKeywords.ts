@@ -12,8 +12,8 @@ export default async function handler(
   req: KeywordNextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "GET") {
-    res.status(400).json("Only GET requests accepted");
+  if (req.method !== "POST") {
+    res.status(400).json("Only POST requests accepted");
     res.end();
   }
   const { keyword } = req.body;

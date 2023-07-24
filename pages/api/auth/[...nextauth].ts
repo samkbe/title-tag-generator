@@ -49,8 +49,6 @@ export default NextAuth({
           });
           const tokens: TokenSet = await response.json();
 
-          console.log("RESPONSE", tokens);
-
           if (!response.ok || typeof tokens.expires_in !== "number")
             throw tokens;
 

@@ -4,20 +4,25 @@ import { useState } from "react";
 
 export default function Start() {
   const [initalInputs, setInitialInputs] = useState({
-    seedKeyword: "",
+    seedKeyword: "Testing",
     websiteUrl: "",
     companyName: "",
   });
 
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywordSuggestions, setKeywordSuggestions] = useState<string[]>([]);
 
   const { currentStep, moveForward, moveBack, stepsIndex } = useMultiStep([
     <InitialInputs
       initalInputs={initalInputs}
       setInitialInputs={setInitialInputs}
-      key="sushsoo"
+      key="InitialInputs"
     />,
-    <BasicTable key="27w37" />,
+    <BasicTable
+      key="BasicTable"
+      keyword={initalInputs.seedKeyword}
+      keywordSuggestions={keywordSuggestions}
+      setKeywordSuggestions={setKeywordSuggestions}
+    />,
     <div key="3">Step 3</div>,
   ]);
 
