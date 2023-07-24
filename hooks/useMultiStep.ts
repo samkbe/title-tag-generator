@@ -1,6 +1,6 @@
 import { ReactElement, useState } from "react";
 
-export function useMultistep(steps: ReactElement[]) {
+export function useMultiStep(steps: ReactElement[]) {
   const [stepsIndex, setStepIndex] = useState(0);
 
   function moveBack() {
@@ -17,7 +17,7 @@ export function useMultistep(steps: ReactElement[]) {
       if (index >= steps.length - 1) {
         return index;
       }
-      return index - 1;
+      return index + 1;
     });
   }
 
