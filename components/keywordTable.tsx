@@ -26,7 +26,6 @@ export function BasicTable({
   if (isError) return <div>Sorry. Error.</div>;
 
   if (data && data.status === "success") {
-    console.log("DATA: ", data);
     return (
       <Table aria-label="basic table">
         <thead>
@@ -39,7 +38,22 @@ export function BasicTable({
         <tbody>
           {data.result.map((keyword) => {
             return (
-              <tr key={keyword.text}>
+              <tr
+                key={keyword.text}
+                onClick={() => {
+                  if (
+                    typeof keyword.text === "string" &&
+                    keyword.text !== undefined &&
+                    keyword.text !== null
+                  ) {
+                    setKeywordSuggestions((prevState) => {
+                      console.log("PREVIOUS STATE: ", prevState);
+                      return new Set(prevState).add(keyword.text!);
+                    });
+                  }
+                  console.log(keywordSuggestions);
+                }}
+              >
                 <td>{keyword.text}</td>
                 <td>{keyword.keyword_idea_metrics?.avg_monthly_searches}</td>
                 <td>{keyword.keyword_idea_metrics?.competition_index} / 100</td>

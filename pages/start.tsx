@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function Start() {
   const [initalInputs, setInitialInputs] = useState({
-    seedKeyword: "Testing",
+    seedKeyword: "",
     websiteUrl: "",
     companyName: "",
   });
