@@ -9,7 +9,9 @@ export default function Start() {
     companyName: "",
   });
 
-  const [keywordSuggestions, setKeywordSuggestions] = useState<string[]>([]);
+  const [keywordSuggestions, setKeywordSuggestions] = useState<Set<string>>(
+    new Set()
+  );
 
   const { currentStep, moveForward, moveBack, stepsIndex } = useMultiStep([
     <InitialInputs

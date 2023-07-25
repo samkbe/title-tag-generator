@@ -5,11 +5,15 @@ import { services } from "google-ads-api";
 
 type Props = {
   keyword: string;
-  keywordSuggestions: string[];
-  setKeywordSuggestions: Dispatch<SetStateAction<string[]>>;
+  keywordSuggestions: Set<string>;
+  setKeywordSuggestions: Dispatch<SetStateAction<Set<string>>>;
 };
 
-export function BasicTable({ keyword, setKeywordSuggestions }: Props) {
+export function BasicTable({
+  keyword,
+  setKeywordSuggestions,
+  keywordSuggestions,
+}: Props) {
   const { data, isError, isFetching, status, isLoading, isSuccess } = useQuery(
     ["getKeywordSuggestions"],
     () => getKeywordSuggestions(keyword),
@@ -21,54 +25,27 @@ export function BasicTable({ keyword, setKeywordSuggestions }: Props) {
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Sorry. Error.</div>;
 
-  if (data) {
+  if (data && data.status === "success") {
+    console.log("DATA: ", data);
     return (
       <Table aria-label="basic table">
         <thead>
           <tr>
-            <th style={{ width: "40%" }}>Dessert (100g serving)</th>
-            <th>Calories</th>
-            <th>Fat&nbsp;(g)</th>
-            <th>Carbs&nbsp;(g)</th>
-            <th>Protein&nbsp;(g)</th>
+            <th style={{ width: "40%" }}>Keyword</th>
+            <th>Avg. Monthly Volume</th>
+            <th>Competition</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Frozen yoghurt</td>
-            <td>159</td>
-            <td>6</td>
-            <td>24</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>Ice cream sandwich</td>
-            <td>237</td>
-            <td>9</td>
-            <td>37</td>
-            <td>4.3</td>
-          </tr>
-          <tr>
-            <td>Eclair</td>
-            <td>262</td>
-            <td>16</td>
-            <td>24</td>
-            <td>6</td>
-          </tr>
-          <tr>
-            <td>Cupcake</td>
-            <td>305</td>
-            <td>3.7</td>
-            <td>67</td>
-            <td>4.3</td>
-          </tr>
-          <tr>
-            <td>Gingerbread</td>
-            <td>356</td>
-            <td>16</td>
-            <td>49</td>
-            <td>3.9</td>
-          </tr>
+          {data.result.map((keyword) => {
+            return (
+              <tr key={keyword.text}>
+                <td>{keyword.text}</td>
+                <td>{keyword.keyword_idea_metrics?.avg_monthly_searches}</td>
+                <td>{keyword.keyword_idea_metrics?.competition_index} / 100</td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     );
@@ -92,7 +69,7 @@ async function getKeywordSuggestions(
 
     return {
       status: "success",
-      result: (await response.json()) as services.GenerateKeywordIdeaResponse,
+      result: (await response.json()) as services.IGenerateKeywordIdeaResult[],
     };
   } catch (e) {
     console.log(e);
@@ -106,7 +83,7 @@ async function getKeywordSuggestions(
 type GetKeywordSuggestionsResponse =
   | {
       status: "success";
-      result: services.GenerateKeywordIdeaResponse;
+      result: services.IGenerateKeywordIdeaResult[];
     }
   | {
       status: "failed";
