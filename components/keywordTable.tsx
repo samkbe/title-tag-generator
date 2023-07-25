@@ -16,52 +16,57 @@ export function BasicTable({
 }: Props) {
   const { data, isError, isFetching, status, isLoading, isSuccess } = useQuery(
     ["getKeywordSuggestions"],
-    () => getKeywordSuggestions(keyword),
-    {
-      // enabled: false,
-    }
+    () => getKeywordSuggestions(keyword)
   );
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Sorry. Error.</div>;
 
-  if (data && data.status === "success") {
+  if (data.status === "success") {
     return (
-      <Table aria-label="basic table">
-        <thead>
-          <tr>
-            <th style={{ width: "40%" }}>Keyword</th>
-            <th>Avg. Monthly Volume</th>
-            <th>Competition</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.result.map((keyword) => {
-            return (
-              <tr
-                key={keyword.text}
-                onClick={() => {
-                  if (
-                    typeof keyword.text === "string" &&
-                    keyword.text !== undefined &&
-                    keyword.text !== null
-                  ) {
-                    setKeywordSuggestions((prevState) => {
-                      console.log("PREVIOUS STATE: ", prevState);
-                      return new Set(prevState).add(keyword.text!);
-                    });
-                  }
-                  console.log(keywordSuggestions);
-                }}
-              >
-                <td>{keyword.text}</td>
-                <td>{keyword.keyword_idea_metrics?.avg_monthly_searches}</td>
-                <td>{keyword.keyword_idea_metrics?.competition_index} / 100</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <>
+        {Array.from(keywordSuggestions).map((item) => (
+          <div key={item}>{item}</div>
+        ))}
+        <Table aria-label="basic table">
+          <thead>
+            <tr>
+              <th style={{ width: "40%" }}>Keyword</th>
+              <th>Avg. Monthly Volume</th>
+              <th>Competition</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.result.map((keyword) => {
+              return (
+                <tr
+                  key={keyword.text}
+                  onClick={() => {
+                    if (
+                      typeof keyword.text === "string" &&
+                      keyword.text !== undefined &&
+                      keyword.text !== null &&
+                      keywordSuggestions.size <= 2
+                    ) {
+                      setKeywordSuggestions((prevState) => {
+                        console.log("PREVIOUS STATE: ", prevState);
+                        return new Set(prevState).add(keyword.text!);
+                      });
+                    }
+                    console.log(keywordSuggestions);
+                  }}
+                >
+                  <td>{keyword.text}</td>
+                  <td>{keyword.keyword_idea_metrics?.avg_monthly_searches}</td>
+                  <td>
+                    {keyword.keyword_idea_metrics?.competition_index} / 100
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </>
     );
   }
   return <div>Neither Error, Loading, or Data</div>;
