@@ -1,4 +1,5 @@
 import { ReactElement, useState } from "react";
+import type { FormEvent } from "react";
 
 export function useMultiStep(steps: ReactElement[]) {
   const [stepsIndex, setStepIndex] = useState(0);
@@ -13,7 +14,8 @@ export function useMultiStep(steps: ReactElement[]) {
     });
   }
 
-  function moveForward() {
+  function moveForward(e: FormEvent) {
+    e.preventDefault();
     setStepIndex((index) => {
       if (index >= steps.length - 1) {
         return index;

@@ -38,12 +38,22 @@ export default function Start() {
         <div onClick={() => moveTo(1)}>Keywords</div>
         <div onClick={() => moveTo(2)}>Results</div>
       </Breadcrumbs>
+
       <div className="flex-grow flex flex-col justify-center items-center">
-        {currentStep}
-        <div className="flex justify-between w-full md:max-w-sm lg:max-w-xl">
-          <button onClick={moveBack}>Move Back</button>
-          <button onClick={moveForward}>Move Forward</button>
-        </div>
+        <form
+          className="flex flex-col justify-between w-full md:max-w-sm lg:max-w-xl p-2"
+          onSubmit={(e) => {
+            moveForward(e);
+          }}
+        >
+          {currentStep}
+          <div className="flex justify-between">
+            <button type="button" onClick={moveBack}>
+              Move Back
+            </button>
+            <button type="submit">Move Forward</button>
+          </div>
+        </form>
       </div>
     </div>
   );

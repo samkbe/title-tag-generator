@@ -24,7 +24,7 @@ export function BasicTable({
 
   if (data.status === "success") {
     return (
-      <>
+      <div className="flex flex-col space-y-6 items-center w-full sm:max-w-xs md:max-w-sm lg:max-w-xl p-8 border-2 rounded-lg">
         {Array.from(keywordSuggestions).map((item) => (
           <div key={item}>{item}</div>
         ))}
@@ -64,7 +64,7 @@ export function BasicTable({
             })}
           </tbody>
         </Table>
-      </>
+      </div>
     );
   }
   return <div>Neither Error, Loading, or Data</div>;
