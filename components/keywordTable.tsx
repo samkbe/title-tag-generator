@@ -49,11 +49,9 @@ export function BasicTable({
                       keywordSuggestions.size <= 2
                     ) {
                       setKeywordSuggestions((prevState) => {
-                        console.log("PREVIOUS STATE: ", prevState);
                         return new Set(prevState).add(keyword.text!);
                       });
                     }
-                    console.log(keywordSuggestions);
                   }}
                 >
                   <td>{keyword.text}</td>
