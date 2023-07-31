@@ -1,25 +1,21 @@
-import { JSONresponse, SerpProps } from "../types";
+import { GeneratedKeyword, SerpTileProps } from "../types";
 
-export function MetaTagDisplay({ data }: JSONresponse) {
-  if (data.__typename === "success") {
-    return (
-      <div className="flex flex-col justify-center min-h-96 mt-8 mb-4">
-        {data.options.map(({ descriptionTag, titleTag }) => (
-          <SerpTile
-            url={data.url}
-            key={titleTag}
-            descriptionTag={descriptionTag}
-            titleTag={titleTag}
-          />
-        ))}
-      </div>
-    );
-  } else {
-    return <>Error....</>;
-  }
+export function MetaTagDisplay({ keyword, options }: GeneratedKeyword) {
+  return (
+    <div className="flex flex-col justify-center min-h-96 mt-8 mb-4">
+      <h1>Keyword: {keyword}</h1>
+      {options.map(({ descriptionTag, titleTag }) => (
+        <SerpTile
+          key={titleTag}
+          descriptionTag={descriptionTag}
+          titleTag={titleTag}
+        />
+      ))}
+    </div>
+  );
 }
 
-function SerpTile({ titleTag, descriptionTag, url }: SerpProps) {
+function SerpTile({ titleTag, descriptionTag }: SerpTileProps) {
   return (
     <div className="">
       <div

@@ -26,7 +26,7 @@ export default async function handler(
     });
   }
   try {
-    const generatedKeywords: GeneratedKeyword = [];
+    const generatedKeywords: GeneratedKeyword[] = [];
     try {
       for (let i = 0; i < keywords.length; i++) {
         const data = await getMetaData({

@@ -8,7 +8,7 @@ export type GetMetadataResponse =
   | {
       __typename: "success";
       url: string;
-      generatedKeywords: GeneratedKeyword;
+      generatedKeywords: GeneratedKeyword[];
     };
 
 export type GeneratedKeyword = {
@@ -17,13 +17,13 @@ export type GeneratedKeyword = {
     titleTag: string;
     descriptionTag: string;
   }[];
-}[];
+};
 
-export type SerpProps = {
+export type SerpTileProps = {
   titleTag: string;
   descriptionTag: string;
-  url: string;
 };
+
 export type JSONresponse = {
   data: GetMetadataResponse;
 };
