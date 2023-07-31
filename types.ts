@@ -1,26 +1,31 @@
 import { NextApiRequest } from "next";
 
-export type MetaTagsResponse = Success | Failed;
-type Failed = {
-  __typename: "failed";
-  message: string;
-};
-type Success = {
-  __typename: "success";
-  url: string;
-  options: MetaTag[];
-};
-type MetaTag = {
-  titleTag: string;
-  descriptionTag: string;
-};
+export type GetMetadataResponse =
+  | {
+      __typename: "failed";
+      message: string;
+    }
+  | {
+      __typename: "success";
+      url: string;
+      generatedKeywords: GeneratedKeyword;
+    };
+
+export type GeneratedKeyword = {
+  keyword: string;
+  options: {
+    titleTag: string;
+    descriptionTag: string;
+  }[];
+}[];
+
 export type SerpProps = {
   titleTag: string;
   descriptionTag: string;
   url: string;
 };
 export type JSONresponse = {
-  data: MetaTagsResponse;
+  data: GetMetadataResponse;
 };
 export type GetMetaDataArgs = {
   url: string;
@@ -29,7 +34,7 @@ export type GetMetaDataArgs = {
 };
 export interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
-    keyword: string;
+    keywords: string[];
     url: string;
     companyName: string;
   };

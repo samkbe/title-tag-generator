@@ -3,30 +3,60 @@ import { Configuration, OpenAIApi, CreateCompletionResponse } from "openai";
 import {
   GetMetaDataArgs,
   ExtendedNextApiRequest,
-  MetaTagsResponse,
+  GetMetadataResponse,
+  GeneratedKeyword,
 } from "../../types";
 
-export default function handler(
+export default async function handler(
   req: ExtendedNextApiRequest,
-  res: NextApiResponse<MetaTagsResponse>
+  res: NextApiResponse<GetMetadataResponse>
 ) {
-  const { keyword, url, companyName } = req.body;
+  console.log("INITIATED: ", req.body);
+
+  if (req.method !== "POST") {
+    res.status(400);
+    res.end();
+  }
+  const { keywords, url, companyName } = req.body;
+
+  if (keywords.length > 3) {
+    res.status(400).json({
+      __typename: "failed",
+      message: "Max keywords are 3",
+    });
+  }
   try {
-    getMetaData(req.body).then((data) => {
-      if (data) {
-        res.status(200).json({
-          __typename: "success",
+    const generatedKeywords: GeneratedKeyword = [];
+    try {
+      for (let i = 0; i < keywords.length; i++) {
+        const data = await getMetaData({
+          keyword: keywords[i],
           url: url,
+          companyName: companyName,
+        });
+
+        if (!data) throw new Error();
+
+        generatedKeywords.push({
+          keyword: keywords[i],
           options: data.metaDataArray,
         });
-      } else {
-        throw new Error();
       }
-    });
+      res.status(200).json({
+        __typename: "success",
+        url: url,
+        generatedKeywords: generatedKeywords,
+      });
+    } catch (e) {
+      res.status(400).json({
+        __typename: "failed",
+        message: JSON.stringify(e),
+      });
+    }
   } catch (e) {
     res.status(400).json({
       __typename: "failed",
-      message: e as string,
+      message: JSON.stringify(e),
     });
   }
 }
@@ -75,6 +105,6 @@ async function getMetaData({ url, keyword, companyName }: GetMetaDataArgs) {
     const formattedData = extract(openApiResponse.data);
     return formattedData;
   } catch (e) {
-    console.log("ERROR", e);
+    console.log(e);
   }
 }

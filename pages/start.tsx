@@ -1,5 +1,10 @@
 import { useMultiStep } from "../hooks";
-import { BasicTable, InitialInputs, NavBar } from "../components";
+import {
+  KeywordTable,
+  InitialInputs,
+  NavBar,
+  GeneratedTagsDisplay,
+} from "../components";
 import { useState } from "react";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 
@@ -17,17 +22,22 @@ export default function Start() {
   const { currentStep, moveForward, moveBack, stepsIndex, moveTo } =
     useMultiStep([
       <InitialInputs
+        key="InitialInputs"
         initalInputs={initalInputs}
         setInitialInputs={setInitialInputs}
-        key="InitialInputs"
       />,
-      <BasicTable
-        key="BasicTable"
+      <KeywordTable
+        key="KeywordTable"
         keyword={initalInputs.seedKeyword}
         keywordSuggestions={keywordSuggestions}
         setKeywordSuggestions={setKeywordSuggestions}
       />,
-      <div key="3">Step 3</div>,
+      <GeneratedTagsDisplay
+        key="GeneratedTagsDisplay"
+        keywords={Array.from(keywordSuggestions)}
+        url={initalInputs.websiteUrl}
+        companyName={initalInputs.companyName}
+      />,
     ]);
 
   return (

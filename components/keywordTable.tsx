@@ -9,7 +9,17 @@ type Props = {
   setKeywordSuggestions: Dispatch<SetStateAction<Set<string>>>;
 };
 
-export function BasicTable({
+type GetKeywordSuggestionsResponse =
+  | {
+      status: "success";
+      result: services.IGenerateKeywordIdeaResult[];
+    }
+  | {
+      status: "failed";
+      errorMessage: string;
+    };
+
+export function KeywordTable({
   keyword,
   setKeywordSuggestions,
   keywordSuggestions,
@@ -19,7 +29,16 @@ export function BasicTable({
     () => getKeywordSuggestions(keyword)
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex flex-col space-y-6 items-center w-full sm:max-w-xs md:max-w-sm lg:max-w-xl p-8 border-2 rounded-lg">
+        <div role="status" className="animate-pulse mb-4">
+          <div className="h-2.5 bg-lightGrey rounded-full w-full"></div>
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+
   if (isError) return <div>Sorry. Error.</div>;
 
   if (data.status === "success") {
@@ -74,7 +93,7 @@ async function getKeywordSuggestions(
   keyword: string
 ): Promise<GetKeywordSuggestionsResponse> {
   try {
-    const response = await fetch("/api/getKeywords", {
+    const response = await fetch("/api/get-keyword-suggestions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,13 +115,3 @@ async function getKeywordSuggestions(
     };
   }
 }
-
-type GetKeywordSuggestionsResponse =
-  | {
-      status: "success";
-      result: services.IGenerateKeywordIdeaResult[];
-    }
-  | {
-      status: "failed";
-      errorMessage: string;
-    };
