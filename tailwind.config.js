@@ -15,7 +15,13 @@ module.exports = {
       green: "#D6F5CD",
       logoColor: "#6E55FF",
     },
-    extend: {},
+    extend: {
+      minWidth: {
+        "1/2": "50%",
+        "1/4": "25%",
+        "1/3": "33%",
+      },
+    },
   },
   plugins: [],
 };

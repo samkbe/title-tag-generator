@@ -43,15 +43,9 @@ export default function Start() {
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
-      {/* <Breadcrumbs separator="›" aria-label="breadcrumbs">
-        <div onClick={() => moveTo(0)}>Initial Inputs</div>
-        <div onClick={() => moveTo(1)}>Keywords</div>
-        <div onClick={() => moveTo(2)}>Results</div>
-      </Breadcrumbs> */}
-
       <div className="flex-grow flex flex-col justify-center items-center">
         <form
-          className="flex flex-col justify-between"
+          className="flex flex-col justify-between w-full items-center px-8 md:px-0"
           onSubmit={(e) => {
             moveForward(e);
           }}

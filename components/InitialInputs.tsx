@@ -13,7 +13,7 @@ type InitialInputProps = {
 
 export function InitialInputs({ initalInputs, setInitialInputs }: Props) {
   return (
-    <div className="flex flex-col space-y-6 items-center w-full sm:max-w-xs md:max-w-sm lg:max-w-xl p-8 border-2 rounded-lg">
+    <div className="flex flex-col space-y-6 items-center p-8 border-2 rounded-lg container lg:max-w-[40%]">
       <label
         className="block text-sm font-medium dark:text-white w-full"
         htmlFor="company_name"
@@ -21,7 +21,7 @@ export function InitialInputs({ initalInputs, setInitialInputs }: Props) {
         Company Name
         <input
           minLength={3}
-          className="border border-lightGrey text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="border border-lightGrey text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full"
           name="company_name"
           required
           placeholder="My cool company"
@@ -39,7 +39,7 @@ export function InitialInputs({ initalInputs, setInitialInputs }: Props) {
         <input
           minLength={3}
           name="website"
-          className="border border-lightGrey text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="border border-lightGrey text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full"
           required
           placeholder="www.mywebsite.com"
           value={initalInputs.websiteUrl}
@@ -56,7 +56,7 @@ export function InitialInputs({ initalInputs, setInitialInputs }: Props) {
         <input
           minLength={3}
           name="keyword"
-          className="border border-lightGrey text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="border border-lightGrey text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full"
           required
           placeholder="keyword"
           value={initalInputs.seedKeyword}
