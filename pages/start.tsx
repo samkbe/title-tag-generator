@@ -1,12 +1,11 @@
 import { useMultiStep } from "../hooks";
+import { useState } from "react";
 import {
   KeywordTable,
   InitialInputs,
   NavBar,
   GeneratedTagsDisplay,
 } from "../components";
-import { useState } from "react";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
 
 export default function Start() {
   const [initalInputs, setInitialInputs] = useState({
@@ -19,7 +18,7 @@ export default function Start() {
     new Set()
   );
 
-  const { currentStep, moveForward, moveBack, stepsIndex, moveTo, isLastStep } =
+  const { currentStep, moveForward, moveBack, isLastStep, isFirstStep } =
     useMultiStep([
       <InitialInputs
         key="InitialInputs"
@@ -52,19 +51,21 @@ export default function Start() {
         >
           {currentStep}
           <div className="flex justify-between">
-            <button
-              className="rounded-md border-2 pr-2 pl-2 mt-2 hover:bg-logoColor hover:text-lightestGrey transition-all"
-              type="button"
-              onClick={moveBack}
-            >
-              Move Back
-            </button>
+            {!isFirstStep && (
+              <button
+                className="rounded-md border-2 pr-2 pl-2 mt-2 hover:bg-logoColor hover:text-lightestGrey transition-all"
+                type="button"
+                onClick={moveBack}
+              >
+                Back
+              </button>
+            )}
             {!isLastStep && (
               <button
                 className="rounded-md border-2 pr-2 pl-2 mt-2 hover:bg-logoColor hover:text-lightestGrey transition-all"
                 type="submit"
               >
-                Move Forward
+                Forward
               </button>
             )}
           </div>

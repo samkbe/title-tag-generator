@@ -34,5 +34,6 @@ export function useMultiStep(steps: ReactElement[]) {
     moveForward,
     moveTo,
     isLastStep: stepsIndex === steps.length - 1,
+    isFirstStep: stepsIndex === 0,
   };
 }
