@@ -13,6 +13,7 @@ module.exports = {
       lightGrey: "#DEDEDE",
       lightestGrey: "#F8FAFC",
       green: "#D6F5CD",
+      logoColor: "#6E55FF",
     },
     extend: {},
   },

@@ -3,7 +3,6 @@ import type { FormEvent } from "react";
 
 export function useMultiStep(steps: ReactElement[]) {
   const [stepsIndex, setStepIndex] = useState(0);
-  const [testVariable, setTestVariable] = useState(0);
 
   function moveBack() {
     setStepIndex((index) => {
@@ -34,7 +33,6 @@ export function useMultiStep(steps: ReactElement[]) {
     moveBack,
     moveForward,
     moveTo,
-    testVariable,
-    setTestVariable,
+    isLastStep: stepsIndex === steps.length - 1,
   };
 }

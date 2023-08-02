@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { GetMetadataResponse } from "../types";
 import { MetaTagDisplay } from "../components";
+import Image from "next/image";
+import LoadingIcon from "../public/Pulse-1s-200px.svg";
 
 type GeneratedTagsDisplayProps = {
   keywords: string[];
@@ -22,19 +24,13 @@ export function GeneratedTagsDisplay({
   );
 
   if (isFetching || isRefetching)
-    return (
-      <div className="flex flex-col justify-center min-h-96 mt-8 mb-4">
-        <LoadingSkeleton />
-        <LoadingSkeleton />
-        <LoadingSkeleton />
-      </div>
-    );
+    return <Image alt="loading-icon" src={LoadingIcon} />;
 
   if (isError) return <div>Error</div>;
 
   if (data?.__typename === "success") {
     return (
-      <div className="">
+      <div className="flex flex-row p-2">
         {data.generatedKeywords.map((keywordResult) => {
           return (
             <MetaTagDisplay key={keywordResult.keyword} {...keywordResult} />

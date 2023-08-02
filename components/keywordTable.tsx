@@ -43,47 +43,70 @@ export function KeywordTable({
 
   if (data.status === "success") {
     return (
-      <div className="flex flex-col space-y-6 items-center w-full sm:max-w-xs md:max-w-sm lg:max-w-xl p-8 border-2 rounded-lg">
-        {Array.from(keywordSuggestions).map((item) => (
-          <div key={item}>{item}</div>
-        ))}
-        <Table aria-label="basic table">
-          <thead>
-            <tr>
-              <th style={{ width: "40%" }}>Keyword</th>
-              <th>Avg. Monthly Volume</th>
-              <th>Competition</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.result.map((keyword) => {
-              return (
-                <tr
-                  key={keyword.text}
-                  onClick={() => {
-                    if (
-                      typeof keyword.text === "string" &&
-                      keyword.text !== undefined &&
-                      keyword.text !== null &&
-                      keywordSuggestions.size <= 2
-                    ) {
-                      setKeywordSuggestions((prevState) => {
-                        return new Set(prevState).add(keyword.text!);
-                      });
-                    }
-                  }}
-                >
-                  <td>{keyword.text}</td>
-                  <td>{keyword.keyword_idea_metrics?.avg_monthly_searches}</td>
-                  <td>
-                    {keyword.keyword_idea_metrics?.competition_index} / 100
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      </div>
+      <>
+        <div className="flex flex-row justify-space-between">
+          {Array.from(keywordSuggestions).map((item) => (
+            <div key={item}>{item}</div>
+          ))}
+        </div>
+        <div className="flex flex-col space-y-6 items-center w-full sm:max-w-xs md:max-w-sm lg:max-w-xl p-8 border-2 rounded-lg">
+          <Table aria-label="basic table">
+            <thead>
+              <tr>
+                <th style={{ width: "40%" }}>Keyword</th>
+                <th>Avg. Monthly Volume</th>
+                <th>Competition</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.result.map((keyword) => {
+                const checked = keywordSuggestions.has(keyword.text!);
+                return (
+                  <tr
+                    key={keyword.text}
+                    onClick={() => {
+                      if (
+                        typeof keyword.text === "string" &&
+                        keyword.text !== undefined &&
+                        keyword.text !== null &&
+                        keywordSuggestions.size <= 2
+                      ) {
+                        setKeywordSuggestions((prevState) => {
+                          return new Set(prevState).add(keyword.text!);
+                        });
+                      }
+                    }}
+                  >
+                    <td>
+                      <div
+                        onClick={() => {
+                          setKeywordSuggestions((prevState) => {
+                            let newState = new Set(prevState);
+                            if (newState.has(keyword.text!)) {
+                              newState.delete(keyword.text!);
+                            } else {
+                              newState.add(keyword.text!);
+                            }
+                            return newState;
+                          });
+                        }}
+                      >
+                        {keyword.text}
+                      </div>
+                    </td>
+                    <td>
+                      {keyword.keyword_idea_metrics?.avg_monthly_searches}
+                    </td>
+                    <td>
+                      {keyword.keyword_idea_metrics?.competition_index} / 100
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
+      </>
     );
   }
   return <div>Neither Error, Loading, or Data</div>;
