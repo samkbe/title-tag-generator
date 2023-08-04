@@ -30,7 +30,7 @@ export function GeneratedTagsDisplay({
 
   if (data?.__typename === "success") {
     return (
-      <div className="flex flex-row p-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {data.generatedKeywords.map((keywordResult) => {
           return (
             <MetaTagDisplay key={keywordResult.keyword} {...keywordResult} />
