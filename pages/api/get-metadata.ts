@@ -1,5 +1,5 @@
 import type { NextApiResponse } from "next";
-import { Configuration, OpenAIApi, CreateCompletionResponse } from "openai";
+import OpenAI from "openai";
 import {
   GetMetaDataArgs,
   ExtendedNextApiRequest,
@@ -11,48 +11,26 @@ export default async function handler(
   req: ExtendedNextApiRequest,
   res: NextApiResponse<GetMetadataResponse>
 ) {
-  console.log("INITIATED: ", req.body);
-
   if (req.method !== "POST") {
     res.status(400);
     res.end();
   }
   const { keywords, url, companyName } = req.body;
 
-  if (keywords.length > 3) {
-    res.status(400).json({
-      __typename: "failed",
-      message: "Max keywords are 3",
-    });
-  }
   try {
-    const generatedKeywords: GeneratedKeyword[] = [];
-    try {
-      for (let i = 0; i < keywords.length; i++) {
-        const data = await getMetaData({
-          keyword: keywords[i],
-          url: url,
-          companyName: companyName,
-        });
-
-        if (!data) throw new Error();
-
-        generatedKeywords.push({
-          keyword: keywords[i],
-          options: data.metaDataArray,
-        });
-      }
-      res.status(200).json({
-        __typename: "success",
-        url: url,
-        generatedKeywords: generatedKeywords,
-      });
-    } catch (e) {
-      res.status(400).json({
-        __typename: "failed",
-        message: JSON.stringify(e),
-      });
+    if (keywords.length > 3) {
+      throw new Error("Max keywords are 3");
     }
+
+    const generatedKeywords: GeneratedKeyword[] = await Promise.all(
+      keywords.map((keyword) => getMetaData({ keyword, url, companyName }))
+    );
+
+    res.status(200).json({
+      __typename: "success",
+      url,
+      generatedKeywords,
+    });
   } catch (e) {
     res.status(400).json({
       __typename: "failed",
@@ -61,50 +39,57 @@ export default async function handler(
   }
 }
 
-//This parses and formats the Open AI API response
-function extract(response: CreateCompletionResponse) {
-  return {
-    __typename: "success",
-    metaDataArray: response.choices.map((choice) => {
-      if (choice.text) {
-        const responseText = choice.text.trim();
-        const lines = responseText.split("\n");
-        const titleTag = lines[0].replace("Title Tag: ", "");
-        const descriptionTag = lines[1].replace("Description Tag: ", "");
-        return {
-          descriptionTag: descriptionTag,
-          titleTag: titleTag,
-        };
-      } else {
-        throw new Error("Open AI API response error");
-      }
-    }),
-  };
-}
+async function getMetaData({
+  url,
+  keyword,
+  companyName,
+}: GetMetaDataArgs): Promise<GeneratedKeyword> {
+  const content = `Act as an SEO expert. Create an SEO plan for a company given the following information: Their target keyword is "${keyword}" their company name is: "${companyName}", and their website url is: "${url}".`;
 
-//This prompts OpenAPI for metadata
-async function getMetaData({ url, keyword, companyName }: GetMetaDataArgs) {
-  const prompt = `Act as an SEO expert. Generate an optimized title tag strictly under 60 characters and a description tag strictly under 155 characters with the keyword "${keyword}" for the company ${companyName}. Their website is ${url}. Include the company name at the end of the title tag, not the beginning. Provide the title tag and description tag strictly in the following format:
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  Title Tag: [title]
-  Description Tag: [description]`;
-
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: content }],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "createSeoPlan",
+          description:
+            "Creates an SEO plan based on the title tage and description tag of a webpage",
+          parameters: {
+            type: "object",
+            properties: {
+              titleTag: {
+                type: "string",
+                description:
+                  "The optimized title tag for their webpage that is strictly under 60 characters and contains their desired keyword",
+              },
+              descriptionTag: {
+                type: "string",
+                description:
+                  "The optimized description tag for their webpage that is strictly under 155 characters",
+              },
+            },
+            required: ["location"],
+          },
+        },
+      },
+    ],
+    tool_choice: "auto",
   });
 
-  try {
-    const openai = new OpenAIApi(configuration);
-    const openApiResponse = await openai.createCompletion({
-      model: "text-davinci-002",
-      prompt: prompt,
-      temperature: 0.7,
-      max_tokens: 100,
-      n: 3,
-    });
-    const formattedData = extract(openApiResponse.data);
-    return formattedData;
-  } catch (e) {
-    console.log(e);
+  const validCompletion =
+    response?.choices?.[0].message.tool_calls?.[0].function.arguments;
+
+  if (validCompletion) {
+    const parsedCompletion = JSON.parse(validCompletion);
+    return {
+      keyword,
+      ...parsedCompletion,
+    };
+  } else {
+    throw new Error("Open API request error");
   }
 }

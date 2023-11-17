@@ -50,7 +50,7 @@ export default function Start() {
           }}
         >
           {currentStep}
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             {!isFirstStep && (
               <button
                 className="rounded-md border-2 pr-2 pl-2 mt-2 hover:bg-logoColor hover:text-lightestGrey transition-all"

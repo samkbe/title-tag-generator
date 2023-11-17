@@ -1,19 +1,21 @@
 import { GeneratedKeyword, SerpTileProps } from "../types";
 
-export function MetaTagDisplay({ keyword, options }: GeneratedKeyword) {
+export function MetaTagDisplay({
+  keyword,
+  descriptionTag,
+  titleTag,
+}: GeneratedKeyword) {
   return (
     <div className="flex flex-col justify-center max-w-6xl mt-8 mb-4">
       <h1 className="text-sm">
         Keyword: <span className="text-3xl">{keyword}</span>
       </h1>
       <div className="border-lightestGrey rounded-md border-2 p-2">
-        {options.map(({ descriptionTag, titleTag }) => (
-          <SerpTile
-            key={titleTag}
-            descriptionTag={descriptionTag}
-            titleTag={titleTag}
-          />
-        ))}
+        <SerpTile
+          key={titleTag}
+          descriptionTag={descriptionTag}
+          titleTag={titleTag}
+        />
       </div>
     </div>
   );

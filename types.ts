@@ -13,10 +13,8 @@ export type GetMetadataResponse =
 
 export type GeneratedKeyword = {
   keyword: string;
-  options: {
-    titleTag: string;
-    descriptionTag: string;
-  }[];
+  titleTag: string;
+  descriptionTag: string;
 };
 
 export type SerpTileProps = {
