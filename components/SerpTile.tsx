@@ -15,15 +15,12 @@ export function Tile({
     ["fetchSeoData", keyword, url, companyName],
     () => fetchSeoData({ keyword, url, companyName, llm: "open-ai" }),
     {
-      enabled: false,
+      enabled: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: Infinity,
     }
   );
-
-  if (isFetching) {
-    return <p>Loading...</p>;
-  }
-
-  console.log("DATA: ", data);
 
   return (
     <div className="flex flex-col justify-center max-w-6xl mt-8 mb-4">
@@ -65,15 +62,18 @@ function SerpTile({ titleTag, descriptionTag }: SerpTileProps) {
   );
 }
 
-async function fetchSeoData(
-  requestBody: any
-): Promise<GeneratedKeywordResponse> {
-  const response = await fetch("/api/get-tags", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
+async function fetchSeoData(body: {
+  keyword: string;
+  url: string;
+  companyName: string;
+  llm: "open-ai";
+}): Promise<GeneratedKeywordResponse> {
+  console.log("REFETCHED!");
+  const fetchUrl = new URL(window.location.origin + "/api/get-tags/");
+  fetchUrl.search = new URLSearchParams(body).toString();
+
+  const response = await fetch(fetchUrl, {
+    method: "GET",
   });
   if (response.ok) {
     return await response.json();

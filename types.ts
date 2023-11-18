@@ -55,7 +55,7 @@ export interface ExtendedNextApiRequest extends NextApiRequest {
   };
 }
 export interface GetTagsRequest extends NextApiRequest {
-  body: {
+  query: {
     keyword: string;
     url: string;
     companyName: string;

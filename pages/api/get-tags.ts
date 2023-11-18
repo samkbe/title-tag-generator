@@ -11,12 +11,12 @@ export default async function handler(
   req: GetTagsRequest,
   res: NextApiResponse<GeneratedKeywordResponse>
 ) {
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     res.status(400);
     res.end();
   }
 
-  const { keyword, url, companyName, llm } = req.body;
+  const { keyword, url, companyName, llm } = req.query;
 
   try {
     if (llm === "open-ai") {
