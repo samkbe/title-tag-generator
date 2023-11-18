@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { GetMetadataResponse } from "../types";
-import { MetaTagDisplay } from "../components";
+import { MetaTagDisplay, Tile } from "../components";
 import Image from "next/image";
 import LoadingIcon from "../public/Pulse-1s-200px.svg";
 
@@ -15,32 +15,45 @@ export function GeneratedTagsDisplay({
   url,
   companyName,
 }: GeneratedTagsDisplayProps) {
-  const { data, isError, refetch, isRefetching, isFetching } = useQuery(
-    ["generateMetaTags"],
-    () => generateMetaTags({ keywords, url, companyName }),
-    {
-      enabled: true,
-    }
+  return (
+    <div>
+      {keywords.map((keyword) => (
+        <Tile
+          key={keyword}
+          keyword={keyword}
+          url={url}
+          companyName={companyName}
+        />
+      ))}
+    </div>
   );
 
-  if (isFetching || isRefetching)
-    return <Image alt="loading-icon" src={LoadingIcon} />;
+  // const { data, isError, refetch, isRefetching, isFetching } = useQuery(
+  //   ["generateMetaTags"],
+  //   () => generateMetaTags({ keywords, url, companyName }),
+  //   {
+  //     enabled: true,
+  //   }
+  // );
 
-  if (isError) return <div>Error</div>;
+  // if (isFetching || isRefetching)
+  //   return <Image alt="loading-icon" src={LoadingIcon} />;
 
-  if (data?.__typename === "success") {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {data.generatedKeywords.map((keywordResult) => {
-          return (
-            <MetaTagDisplay key={keywordResult.keyword} {...keywordResult} />
-          );
-        })}
-      </div>
-    );
-  } else {
-    return <div>Sorry, nothing here</div>;
-  }
+  // if (isError) return <div>Error</div>;
+
+  // if (data?.__typename === "success") {
+  //   return (
+  //     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+  //       {data.generatedKeywords.map((keywordResult) => {
+  //         return (
+  //           <MetaTagDisplay key={keywordResult.keyword} {...keywordResult} />
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // } else {
+  //   return <div>Sorry, nothing here</div>;
+  // }
 }
 
 async function generateMetaTags({
