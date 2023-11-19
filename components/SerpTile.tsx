@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { SerpTileProps, GeneratedKeywordResponse } from "../types";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,9 +12,20 @@ export function Tile({
   url: string;
   companyName: string;
 }) {
+  const [queryKey, setQueryKey] = useState([
+    "fetchSeoData",
+    keyword,
+    url,
+    companyName,
+    "open-ai",
+  ]);
+
   const { data, isError, refetch, isRefetching, isFetching } = useQuery(
-    ["fetchSeoData", keyword, url, companyName],
-    () => fetchSeoData({ keyword, url, companyName, llm: "open-ai" }),
+    queryKey,
+    () => {
+      const [_, keyword, url, companyName, llm] = queryKey;
+      return fetchSeoData({ keyword, url, companyName, llm });
+    },
     {
       enabled: true,
       refetchOnWindowFocus: false,
@@ -21,6 +33,10 @@ export function Tile({
       staleTime: Infinity,
     }
   );
+
+  function updateQueryKey(newLlm: string) {
+    setQueryKey(["fetchSeoData", keyword, url, companyName, newLlm]);
+  }
 
   return (
     <div className="flex flex-col justify-center max-w-6xl mt-8 mb-4">
@@ -35,6 +51,9 @@ export function Tile({
           />
         ) : null}
       </div>
+      <button onClick={() => updateQueryKey("cohere")}>
+        Refetch with Cohere
+      </button>
     </div>
   );
 }
@@ -66,9 +85,9 @@ async function fetchSeoData(body: {
   keyword: string;
   url: string;
   companyName: string;
-  llm: "open-ai";
+  llm: string;
 }): Promise<GeneratedKeywordResponse> {
-  console.log("REFETCHED!");
+  console.log("REFETCHED");
   const fetchUrl = new URL(window.location.origin + "/api/get-tags/");
   fetchUrl.search = new URLSearchParams(body).toString();
 
