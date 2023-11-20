@@ -44,6 +44,7 @@ export default async function handler(
             return { test: 1 };
           },
           include_adult_keywords: false,
+          // keyword_and_url_seed: {},
           keyword_seed: {
             keywords: [keyword],
           },

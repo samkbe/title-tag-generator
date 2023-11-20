@@ -35,7 +35,11 @@ export function Tile({
   );
 
   function updateQueryKey(newLlm: string) {
-    setQueryKey(["fetchSeoData", keyword, url, companyName, newLlm]);
+    if (newLlm === queryKey[4]) {
+      refetch();
+    } else {
+      setQueryKey(["fetchSeoData", keyword, url, companyName, newLlm]);
+    }
   }
 
   return (
@@ -44,11 +48,17 @@ export function Tile({
         Keyword: <span className="text-sm">{keyword}</span>
       </h1>
       <div className="border-lightestGrey rounded-md border-2 p-2">
-        {data ? (
+        {isRefetching ? (
+          <p>Refetching...</p>
+        ) : isFetching ? (
+          <p>Loading...</p>
+        ) : data ? (
           <SerpTile
             descriptionTag={data.descriptionTag}
             titleTag={data.titleTag}
           />
+        ) : isError ? (
+          <p>Error loading data</p>
         ) : null}
       </div>
       <button onClick={() => updateQueryKey("cohere")}>

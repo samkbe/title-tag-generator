@@ -44,7 +44,7 @@ export type GetKeywordResults = {
   url: string;
   keyword: string;
   companyName: string;
-  llm: "open-ai" | "cohere" | "fireworks";
+  llm: "open-ai" | "cohere";
 };
 
 export interface ExtendedNextApiRequest extends NextApiRequest {
@@ -59,6 +59,6 @@ export interface GetTagsRequest extends NextApiRequest {
     keyword: string;
     url: string;
     companyName: string;
-    llm: "open-ai" | "cohere" | "fireworks";
+    llm: "open-ai" | "cohere";
   };
 }
